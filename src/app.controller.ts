@@ -1,7 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { randomUUID } from 'node:crypto';
 
-import { PrismaService } from './database/prisma.service';
 import { CreateTeamMemberBody } from './dtos/create-team-member-body';
 import { RocketMembersRepository } from './repositories/rocket-members-repository';
 
