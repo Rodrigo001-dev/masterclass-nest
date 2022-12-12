@@ -1,6 +1,8 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
+import { randomUUID } from 'node:crypto';
 
 import { PrismaService } from './database/prisma.service';
+import { CreateTeamMemberBody } from './dtos/create-team-member-body';
 
 @Controller('app')
 export class AppController {
@@ -13,13 +15,15 @@ export class AppController {
   // dependências para ele e não o AppController vai lá e busca suas dependências
   // constructor(private readonly appService: AppService) {}
 
-  @Get('hello')
-  async getHello() {
+  @Post('hello')
+  async getHello(@Body() body: CreateTeamMemberBody) {
+    const { name, function: memberFunction } = body;
+
     const member = await this.prisma.rocketTeamMember.create({
       data: {
-        id: 'capitao',
-        name: 'Guilherme Capitão',
-        function: 'Alcançar coisas no alto',
+        id: randomUUID(),
+        name,
+        function: memberFunction,
       },
     });
 
