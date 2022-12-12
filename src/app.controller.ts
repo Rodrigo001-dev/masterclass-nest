@@ -3,10 +3,11 @@ import { randomUUID } from 'node:crypto';
 
 import { PrismaService } from './database/prisma.service';
 import { CreateTeamMemberBody } from './dtos/create-team-member-body';
+import { RocketMembersRepository } from './repositories/rocket-members-repository';
 
 @Controller('app')
 export class AppController {
-  constructor(private prisma: PrismaService) {}
+  constructor(private rocketMembersRepository: RocketMembersRepository) {}
   // no princípio de inversão de dependência: quando temos o controller que
   // depende de outro arquivo(AppService) ao invés do Controller(AppController)
   // simplesmente importar e sair utilizando o AppService ele vai dizer que o
@@ -19,16 +20,14 @@ export class AppController {
   async getHello(@Body() body: CreateTeamMemberBody) {
     const { name, function: memberFunction } = body;
 
-    const member = await this.prisma.rocketTeamMember.create({
-      data: {
-        id: randomUUID(),
-        name,
-        function: memberFunction,
-      },
-    });
+    await this.rocketMembersRepository.create(name, memberFunction);
 
-    return {
-      member,
-    };
+    // const member = await this.prisma.rocketTeamMember.create({
+    //   data: {
+    //     id: randomUUID(),
+    //     name,
+    //     function: memberFunction,
+    //   },
+    // });
   }
 }
