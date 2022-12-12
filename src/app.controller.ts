@@ -1,7 +1,10 @@
 import { Controller, Get } from '@nestjs/common';
 
+import { PrismaService } from './database/prisma.service';
+
 @Controller('app')
 export class AppController {
+  constructor(private prisma: PrismaService) {}
   // no princípio de inversão de dependência: quando temos o controller que
   // depende de outro arquivo(AppService) ao invés do Controller(AppController)
   // simplesmente importar e sair utilizando o AppService ele vai dizer que o
@@ -11,9 +14,17 @@ export class AppController {
   // constructor(private readonly appService: AppService) {}
 
   @Get('hello')
-  getHello() {
+  async getHello() {
+    const member = await this.prisma.rocketTeamMember.create({
+      data: {
+        id: 'capitao',
+        name: 'Guilherme Capitão',
+        function: 'Alcançar coisas no alto',
+      },
+    });
+
     return {
-      message: 'Hello Wolrd',
+      member,
     };
   }
 }
